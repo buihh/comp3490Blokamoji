@@ -36,6 +36,17 @@ function init() {
 	// EventHandlers.keyDownHandler();
 	// EventHandlers.keyUpHandler();
 }
+
+function initWebSocket(){
+	var ws = new WebSocket('ws://localhost:9000');
+	ws.onopen = function() {
+		console.log('onopen');
+	};
+	ws.onmessage = function (event) {
+		var msg = JSON.parse(event.data);
+		console.log(msg);
+	};
+}
  
 function addToDOM() {
 	var canvas = document.getElementById('canvas');
@@ -55,6 +66,7 @@ function render() {
  
 try {
 	init();
+	initWebSocket();
    	fillScene();
    	addToDOM();
    	animate();
