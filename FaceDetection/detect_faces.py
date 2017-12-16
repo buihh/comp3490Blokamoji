@@ -1,5 +1,5 @@
 from __future__ import print_function
-from .facedetector import FaceDetector
+from facedetector import FaceDetector
 import argparse
 import cv2
 
@@ -18,6 +18,9 @@ print("I found {} face(s)".format(len(faceRects)))
 
 for (x, y, w, h) in faceRects:
     cv2.rectangle(image, (x, y), (x + w, y + h), (0, 255, 0), 2)
+
+print("Position of face: ")
+print("Start point: " + str(faceRects))
 
 cv2.imshow("Faces", image)
 cv2.waitKey(0)

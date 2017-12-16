@@ -8,7 +8,7 @@ class EyeTracker:
 
     def track(self, image):
         faceRects = self.faceCascade.detectMultiScale(image,
-                                                      scaleFactor=1.1, minNeighbors=5,
+                                                      scaleFactor=1.2, minNeighbors=5,
                                                       minSize=(30, 30),
                                                       flags=cv2.CASCADE_SCALE_IMAGE)
         rects = []
@@ -18,7 +18,7 @@ class EyeTracker:
             rects.append((fX, fY, fX + fW, fY + fH))
 
             eyeRects = self.eyeCascade.detectMultiScale(faceROI,
-                                                        scaleFactor=1.1, minNeighbors=8,
+                                                        scaleFactor=1.2, minNeighbors=8,
                                                         minSize=(15, 15),
                                                         flags=cv2.CASCADE_SCALE_IMAGE)
 

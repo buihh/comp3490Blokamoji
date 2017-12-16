@@ -34,6 +34,8 @@ while True:
     for (fX, fY, fW, fH) in faceRects:
         cv2.rectangle(frameClone, (fX, fY), (fX + fW, fY + fH),
                       (0, 255, 0), 2)
+    print("Position of face: ")
+    print("Start point: " + str(faceRects))
 
     cv2.imshow("Face", frameClone)
 

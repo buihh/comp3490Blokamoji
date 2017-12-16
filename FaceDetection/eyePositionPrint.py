@@ -31,8 +31,6 @@ while True:
 
     rects = et.track(gray)
 
-        # print("Position of first eye: " + rects[1])
-        # print("Position of second eye: " + rects[2])
     count = 0
     for rect in rects:
         cv2.rectangle(frame, (rect[0], rect[1]),
