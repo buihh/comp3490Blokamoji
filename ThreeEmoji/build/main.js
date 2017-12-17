@@ -21,10 +21,10 @@ function init() {
     renderer.setClearColor(0xAAAAAA, 1.0);
     camera = new THREE.PerspectiveCamera(45, canvasRatio, 1, 40000);
     cameraControls = new THREE.OrbitControls(camera, renderer.domElement);
-    camera.position.set(-800, 600, -500);
+    camera.position.set(0, 600, -500);
     cameraControls.target.set(4, 301, 92);
     cameraControls.enablePan = false;
-    // EventHandlers.keyDownHandler();
+    EventHandlers.keyDownHandler();
     // EventHandlers.keyUpHandler();
 }
 function initWebSocket() {
