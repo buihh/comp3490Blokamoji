@@ -4,7 +4,7 @@ var Emoji;
         function TestEmoji(name) {
             this.xRotation = 0;
             this.yRotation = 0;
-            this.zRotation = 0;
+            // this.zRotation = 0;
             this.name = name;
             this.createMesh();
         }
@@ -16,18 +16,39 @@ var Emoji;
             scene.add(newMesh);
             this.mesh = newMesh;
         };
+        // Rotate on X axis
         TestEmoji.prototype.rotateInX = function (degrees) {
-            this.mesh.rotateX(2 * Math.PI * degrees / 360);
-            this.xRotation += degrees;
+            // Check if its turn left or right and only to certain degree
+            if (degrees > 0 && this.xRotation < 30){   // if this gonna turn right
+                this.mesh.rotateX(-2 * Math.PI * degrees / 360); // invert since we have invert rotation
+                this.xRotation += degrees;
+                }
+             else if(degrees <0 && this.xRotation > (-30)){   // else if this gonna turn left
+                this.mesh.rotateX(-2 * Math.PI * degrees / 360);
+                this.xRotation += degrees;
+             }
         };
+
+        // Rotate on Y axis
         TestEmoji.prototype.rotateInY = function (degrees) {
-            this.mesh.rotateY(2 * Math.PI * degrees / 360);
-            this.yRotation += degrees;
+            // Check if it want to face up or face down and only to certain degree
+            if (degrees > 0 && this.yRotation < 30){   // if this gonna face up
+                this.mesh.rotateY(-2 * Math.PI * degrees / 360);
+                this.yRotation += degrees;
+                }
+             else if(degrees <0 && this.yRotation > (-30)){   // else if this gonna face down
+                this.mesh.rotateY(-2 * Math.PI * degrees / 360);
+                this.yRotation += degrees;
+             }
+
         };
-        TestEmoji.prototype.rotateInZ = function (degrees) {
-            this.mesh.rotateZ(2 * Math.PI * degrees / 360);
-            this.zRotation += degrees;
-        };
+
+        // // Rotate on Z axis, for completness
+        // TestEmoji.prototype.rotateInZ = function (degrees) {
+        //     this.mesh.rotateZ(2 * Math.PI * degrees / 360);
+        //     this.zRotation += degrees;
+        // };
+
         return TestEmoji;
     }());
     Emoji.TestEmoji = TestEmoji;

@@ -5,6 +5,7 @@ var scene:THREE.Scene;
 var renderer:THREE.WebGLRenderer;
 var clock = new THREE.Clock();
 var testEmoji:Emoji.TestEmoji;
+
  
 function fillScene() {
 	scene = new THREE.Scene();
