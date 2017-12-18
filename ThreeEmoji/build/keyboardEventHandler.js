@@ -5,6 +5,22 @@ var EventHandlers;
         function onDocumentKeyDown(event) {
             var keyCode = event.which;
             switch (keyCode) {
+                // A
+                case 65:
+                    testEmoji.rotateInY(-10);
+                    break;
+                // D
+                case 68:
+                    testEmoji.rotateInY(10);
+                    break;
+                // S
+                case 83:
+                    testEmoji.rotateInX(-10);
+                    break;
+                // W
+                case 87:
+                    testEmoji.rotateInX(10);
+                    break;
                 default:
                     break;
             }

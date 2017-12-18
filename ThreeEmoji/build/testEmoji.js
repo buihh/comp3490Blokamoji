@@ -2,6 +2,9 @@ var Emoji;
 (function (Emoji) {
     var TestEmoji = /** @class */ (function () {
         function TestEmoji(name) {
+            this.xRotation = 0;
+            this.yRotation = 0;
+            this.zRotation = 0;
             this.name = name;
             this.createMesh();
         }
@@ -12,6 +15,18 @@ var Emoji;
             newMesh.position.set(0, 300, 0);
             scene.add(newMesh);
             this.mesh = newMesh;
+        };
+        TestEmoji.prototype.rotateInX = function (degrees) {
+            this.mesh.rotateX(2 * Math.PI * degrees / 360);
+            this.xRotation += degrees;
+        };
+        TestEmoji.prototype.rotateInY = function (degrees) {
+            this.mesh.rotateY(2 * Math.PI * degrees / 360);
+            this.yRotation += degrees;
+        };
+        TestEmoji.prototype.rotateInZ = function (degrees) {
+            this.mesh.rotateZ(2 * Math.PI * degrees / 360);
+            this.zRotation += degrees;
         };
         return TestEmoji;
     }());
