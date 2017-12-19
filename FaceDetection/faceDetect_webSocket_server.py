@@ -1,5 +1,4 @@
 from facedetector import FaceDetector
-from library import imutils
 import pickle
 import argparse
 import cv2
@@ -11,14 +10,18 @@ from SimpleWebSocketServer import SimpleWebSocketServer, WebSocket
 
 server = None
 clients = []
+w = 320.0
 
 
+# Encode the message to JSON
 class IntegerEncoder(json.JSONEncoder):
     def default(self, o):
         if isinstance(o, int):
             return json.JSONEncoder.default(self, o)
         return {'_python_object': pickle.dumps(o)}
 
+
+# Simple webserver opening
 class SimpleWSServer(WebSocket):
     def handleConnected(self):
         clients.append(self)
@@ -27,6 +30,7 @@ class SimpleWSServer(WebSocket):
         clients.remove(self)
 
 
+# Function to run the server call by thread
 def run_server():
     global server
     server = SimpleWebSocketServer('', 9000, SimpleWSServer,
@@ -34,6 +38,7 @@ def run_server():
     server.serveforever()
 
 
+# Run the thread
 t = threading.Thread(target=run_server)
 t.start()
 
@@ -58,11 +63,15 @@ while True:
     if args.get("video") and not grabbed:
         break
 
-    frame = imutils.resize(frame, width=300)
+    img_height, img_width, depth = frame.shape
+    scale = w / img_width
+    h = img_height * scale
+    frame = cv2.resize(frame, (0, 0), fx=scale, fy=scale)
+
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
-    faceRects = fd.detect(gray, scaleFactor=1.1,
-                          minNeighbors=5, minSize=(30, 30))
+    # Face detection function is here
+    faceRects = fd.detect(gray)
     frameClone = frame.copy()
 
     if faceRects is not None:
@@ -70,18 +79,13 @@ while True:
             cv2.rectangle(frameClone, (fX, fY), (fX + fW, fY + fH),
                           (0, 255, 0), 2)
             for client in clients:
-                data = {}
-                data['X'] = int(fX)
-                data['Y'] = int(fY)
-                data['W'] = int(fW)
-                data['H'] = int(fH)
+                data = {'X': int(fX), 'Y': int(fY), 'W': int(fW), 'H': int(fH)}
                 json_data = json.dumps(data, cls=IntegerEncoder)
                 client.sendMessage(json_data)
 
-
     cv2.imshow("Face", frameClone)
 
-    if cv2.waitKey(1) & 0xFF == ord("q"):
+    if cv2.waitKey(1) & 0xFF == ord('q'):
         break
 
 camera.release()
