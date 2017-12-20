@@ -68,8 +68,8 @@ function initWebSocket(){
             yCoords.push(positionArray[i].y);
         }
 
-        var posX = Math.mean(xCoords);
-        var posY = Math.mean(yCoords);
+        var posX = math.mean(xCoords);
+        var posY = math.mean(yCoords);
 
         // Calculate the current position of the face
         var targetPos = [posX, posY];
@@ -81,8 +81,9 @@ function initWebSocket(){
         diffMove = [(targetPos[0] - lastPosition[0])/STABILIZER,
             (targetPos[1] - lastPosition[1])/STABILIZER];
         ping = 0;
-    };
-// }
+        update();
+    };   
+};
 
 function update(){
     if (positionArray.length === 0){
@@ -94,7 +95,7 @@ function update(){
         lastPosition[0] += diffMove[0];
         lastPosition[1] += diffMove[1];
     }
-
+    console.log(diffMove[0], diffMove[1]);
     // Check on X axis if the head move to the left or right
     if(diffMove[0] >0){
         testEmoji.rotateInX(1);
@@ -110,9 +111,6 @@ function update(){
     else if(diffMove[1] <0){
         testEmoji.rotateInY(-1);
     }
-
-}
-	};
 }
  
 function addToDOM() {

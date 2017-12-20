@@ -16,7 +16,6 @@ function fillScene() {
     Tools.createRoom();
     Tools.fancyLighting();
     testEmoji = new Emoji.TestEmoji("Test");
-
 }
 function init() {
     renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -33,9 +32,7 @@ function init() {
     EventHandlers.keyDownHandler();
     // EventHandlers.keyUpHandler();
 }
-
-// Function to initiate the web socket
-// function initWebSocket() {
+function initWebSocket() {
     var ws = new WebSocket('ws://localhost:9000');
     ws.onopen = function () {
         console.log('onopen');
@@ -57,8 +54,8 @@ function init() {
             xCoords.push(positionArray[i].x);
             yCoords.push(positionArray[i].y);
         }
-        var posX = Math.mean(xCoords);
-        var posY = Math.mean(yCoords);
+        var posX = math.mean(xCoords);
+        var posY = math.mean(yCoords);
         // Calculate the current position of the face
         var targetPos = [posX, posY];
         if (!lastPosition) {
@@ -68,55 +65,51 @@ function init() {
         diffMove = [(targetPos[0] - lastPosition[0]) / STABILIZER,
             (targetPos[1] - lastPosition[1]) / STABILIZER];
         ping = 0;
+        update();
     };
-    // }
-    function update() {
-        if (positionArray.length === 0) {
-            return;
-        }
-        ping++;
-        if (ping < 10) {
-            lastPosition[0] += diffMove[0];
-            lastPosition[1] += diffMove[1];
-        }
-        // Check on X axis if the head move to the left or right
-        if (diffMove[0] > 0) {
-            testEmoji.rotateInX(1);
-        }
-        else if (diffMove[0] < 0) {
-            testEmoji.rotateInX(-1);
-        }
-        // Check on Y axis if the head move up or down
-        if (diffMove[1] > 0) {
-            testEmoji.rotateInY(1);
-        }
-        else if (diffMove[1] < 0) {
-            testEmoji.rotateInY(-1);
-        }
-    }
 }
 ;
+function update() {
+    if (positionArray.length === 0) {
+        return;
+    }
+    ping++;
+    if (ping < 10) {
+        lastPosition[0] += diffMove[0];
+        lastPosition[1] += diffMove[1];
+    }
+    console.log(diffMove[0], diffMove[1]);
+    // Check on X axis if the head move to the left or right
+    if (diffMove[0] > 0) {
+        testEmoji.rotateInX(1);
+    }
+    else if (diffMove[0] < 0) {
+        testEmoji.rotateInX(-1);
+    }
+    // Check on Y axis if the head move up or down
+    if (diffMove[1] > 0) {
+        testEmoji.rotateInY(1);
+    }
+    else if (diffMove[1] < 0) {
+        testEmoji.rotateInY(-1);
+    }
+}
 function addToDOM() {
     var canvas = document.getElementById('canvas');
     canvas.appendChild(renderer.domElement);
 }
-
 function animate() {
     window.requestAnimationFrame(animate);
     render();
 }
-
 function render() {
-    update();
-
     var delta = clock.getDelta();
-
     cameraControls.update();
     renderer.render(scene, camera);
 }
 try {
     init();
-    // initWebSocket();
+    initWebSocket();
     fillScene();
     addToDOM();
     animate();
@@ -124,5 +117,3 @@ try {
 catch (error) {
     console.log(error);
 }
-
-

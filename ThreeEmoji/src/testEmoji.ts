@@ -51,23 +51,43 @@ module Emoji{
         // Need to rotate then move eyes to correct position.
         // Max X-Y = 150-150?
         public rotateInX(degrees:number){
-            if(Math.abs(degrees) < 15 && Math.abs(this.xRotation) < 30){
-                this.mesh.rotateX(-2*Math.PI*degrees/360);
-                this.xRotation += degrees;
+            if(Math.abs(degrees) < 15){
+                console.log("X "+degrees, this.xRotation);
+                if(degrees > 0 && this.xRotation < 45){ //This will allow a max of 44+15= 59 degree max
+                    this.mesh.rotateX(-2*Math.PI*degrees/360);
+                    this.xRotation += degrees;
+                }
+                else if(degrees < 0 && this.xRotation > -45){
+                    this.mesh.rotateX(-2*Math.PI*degrees/360);
+                    this.xRotation += degrees;
+                }
             }
         }
 
         public rotateInY(degrees:number){
-            if(Math.abs(degrees) < 15 && Math.abs(this.yRotation) < 30){
-                this.mesh.rotateY(-2*Math.PI*degrees/360);
-                this.yRotation += degrees;
+            if(Math.abs(degrees) < 15){
+                console.log("Y "+degrees, this.yRotation);
+                if(degrees > 0 && this.yRotation < 45){ //This will allow a max of 44+15= 59 degree max
+                    this.mesh.rotateY(-2*Math.PI*degrees/360);
+                    this.yRotation += degrees;
+                }
+                else if(degrees < 0 && this.yRotation > -45){
+                    this.mesh.rotateY(-2*Math.PI*degrees/360);
+                    this.yRotation += degrees;
+                }
             }
         }
 
         public rotateInZ(degrees:number){
-            if(Math.abs(degrees) < 15 && Math.abs(this.zRotation) < 30){
-                this.mesh.rotateZ(-2*Math.PI*degrees/360);
-                this.zRotation += degrees;
+            if(Math.abs(degrees) < 15){
+                if(degrees > 0 && this.zRotation < 45){ //This will allow a max of 44+15= 59 degree max
+                    this.mesh.rotateZ(-2*Math.PI*degrees/360);
+                    this.zRotation += degrees;
+                }
+                else if(degrees < 0 && this.zRotation > -45){
+                    this.mesh.rotateZ(-2*Math.PI*degrees/360);
+                    this.zRotation += degrees;
+                }
             }
         }
     }

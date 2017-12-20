@@ -4,7 +4,7 @@ var Emoji;
         function TestEmoji(name) {
             this.xRotation = 0;
             this.yRotation = 0;
-            // this.zRotation = 0;
+            this.zRotation = 0;
             this.name = name;
             this.createMesh();
         }
@@ -35,32 +35,43 @@ var Emoji;
         // Need to rotate then move eyes to correct position.
         // Max X-Y = 150-150?
         TestEmoji.prototype.rotateInX = function (degrees) {
-            if (Math.abs(degrees) < 15 && Math.abs(this.xRotation) < 30) {
-                this.mesh.rotateX(-2 * Math.PI * degrees / 360);
-                this.xRotation += degrees;
+            if (Math.abs(degrees) < 15) {
+                console.log("X " + degrees, this.xRotation);
+                if (degrees > 0 && this.xRotation < 45) {
+                    this.mesh.rotateX(-2 * Math.PI * degrees / 360);
+                    this.xRotation += degrees;
+                }
+                else if (degrees < 0 && this.xRotation > -45) {
+                    this.mesh.rotateX(-2 * Math.PI * degrees / 360);
+                    this.xRotation += degrees;
+                }
             }
         };
-
-        // Rotate on Y axis
         TestEmoji.prototype.rotateInY = function (degrees) {
-            if (Math.abs(degrees) < 15 && Math.abs(this.yRotation) < 30) {
-                this.mesh.rotateY(-2 * Math.PI * degrees / 360);
-                this.yRotation += degrees;
+            if (Math.abs(degrees) < 15) {
+                console.log("Y " + degrees, this.yRotation);
+                if (degrees > 0 && this.yRotation < 45) {
+                    this.mesh.rotateY(-2 * Math.PI * degrees / 360);
+                    this.yRotation += degrees;
+                }
+                else if (degrees < 0 && this.yRotation > -45) {
+                    this.mesh.rotateY(-2 * Math.PI * degrees / 360);
+                    this.yRotation += degrees;
+                }
             }
         };
         TestEmoji.prototype.rotateInZ = function (degrees) {
-            if (Math.abs(degrees) < 15 && Math.abs(this.zRotation) < 30) {
-                this.mesh.rotateZ(-2 * Math.PI * degrees / 360);
-                this.zRotation += degrees;
+            if (Math.abs(degrees) < 15) {
+                if (degrees > 0 && this.zRotation < 45) {
+                    this.mesh.rotateZ(-2 * Math.PI * degrees / 360);
+                    this.zRotation += degrees;
+                }
+                else if (degrees < 0 && this.zRotation > -45) {
+                    this.mesh.rotateZ(-2 * Math.PI * degrees / 360);
+                    this.zRotation += degrees;
+                }
             }
         };
-
-        // // Rotate on Z axis, for completness
-        // TestEmoji.prototype.rotateInZ = function (degrees) {
-        //     this.mesh.rotateZ(2 * Math.PI * degrees / 360);
-        //     this.zRotation += degrees;
-        // };
-
         return TestEmoji;
     }());
     Emoji.TestEmoji = TestEmoji;
