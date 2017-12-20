@@ -5,6 +5,12 @@ var scene:THREE.Scene;
 var renderer:THREE.WebGLRenderer;
 var clock = new THREE.Clock();
 var testEmoji:Emoji.TestEmoji;
+
+var positionArray:any[] = [];
+var lastPosition:any;
+var diffMove:any;
+var ping = 0;
+var STABILIZER = 6;
  
 function fillScene() {
 	scene = new THREE.Scene();
@@ -44,7 +50,68 @@ function initWebSocket(){
 	};
 	ws.onmessage = function (event) {
 		var msg = JSON.parse(event.data);
-		console.log(msg);
+		// console.log(msg);
+		// Control the emoji through position of object captured from webcam here
+        positionArray.push({
+            x: msg.X,
+            y: msg.Y
+        })
+
+        if (positionArray.length > 10){
+            positionArray.shift(); // reduce the memory for array
+        }
+
+        // Push it to new x and y coordinate array for computation purpose
+        var xCoords = [], yCoords = [];
+        for (var i = Math.max(positionArray.length-2, 0); i < positionArray.length; i++){
+            xCoords.push(positionArray[i].x);
+            yCoords.push(positionArray[i].y);
+        }
+
+        var posX = Math.mean(xCoords);
+        var posY = Math.mean(yCoords);
+
+        // Calculate the current position of the face
+        var targetPos = [posX, posY];
+        if(!lastPosition){
+            lastPosition = targetPos;
+        }
+
+        //Calculate different in face position
+        diffMove = [(targetPos[0] - lastPosition[0])/STABILIZER,
+            (targetPos[1] - lastPosition[1])/STABILIZER];
+        ping = 0;
+    };
+// }
+
+function update(){
+    if (positionArray.length === 0){
+        return;
+    }
+
+    ping++;
+    if(ping<10){
+        lastPosition[0] += diffMove[0];
+        lastPosition[1] += diffMove[1];
+    }
+
+    // Check on X axis if the head move to the left or right
+    if(diffMove[0] >0){
+        testEmoji.rotateInX(1);
+    }
+    else if(diffMove[0] < 0){
+        testEmoji.rotateInX(-1);
+    }
+
+    // Check on Y axis if the head move up or down
+    if(diffMove[1] >0){
+        testEmoji.rotateInY(1);
+    }
+    else if(diffMove[1] <0){
+        testEmoji.rotateInY(-1);
+    }
+
+}
 	};
 }
  
