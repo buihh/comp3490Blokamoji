@@ -4,7 +4,7 @@ var Emoji;
         function TestEmoji(name) {
             this.xRotation = 0;
             this.yRotation = 0;
-            this.zRotation = 0;
+            // this.zRotation = 0;
             this.name = name;
             this.createMesh();
         }
@@ -40,6 +40,8 @@ var Emoji;
                 this.xRotation += degrees;
             }
         };
+
+        // Rotate on Y axis
         TestEmoji.prototype.rotateInY = function (degrees) {
             if (Math.abs(degrees) < 15 && Math.abs(this.yRotation) < 30) {
                 this.mesh.rotateY(-2 * Math.PI * degrees / 360);
@@ -52,6 +54,13 @@ var Emoji;
                 this.zRotation += degrees;
             }
         };
+
+        // // Rotate on Z axis, for completness
+        // TestEmoji.prototype.rotateInZ = function (degrees) {
+        //     this.mesh.rotateZ(2 * Math.PI * degrees / 360);
+        //     this.zRotation += degrees;
+        // };
+
         return TestEmoji;
     }());
     Emoji.TestEmoji = TestEmoji;

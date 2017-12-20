@@ -16,6 +16,7 @@ function fillScene() {
     Tools.createRoom();
     Tools.fancyLighting();
     testEmoji = new Emoji.TestEmoji("Test");
+
 }
 function init() {
     renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -32,7 +33,9 @@ function init() {
     EventHandlers.keyDownHandler();
     // EventHandlers.keyUpHandler();
 }
-function initWebSocket() {
+
+// Function to initiate the web socket
+// function initWebSocket() {
     var ws = new WebSocket('ws://localhost:9000');
     ws.onopen = function () {
         console.log('onopen');
@@ -97,18 +100,23 @@ function addToDOM() {
     var canvas = document.getElementById('canvas');
     canvas.appendChild(renderer.domElement);
 }
+
 function animate() {
     window.requestAnimationFrame(animate);
     render();
 }
+
 function render() {
+    update();
+
     var delta = clock.getDelta();
+
     cameraControls.update();
     renderer.render(scene, camera);
 }
 try {
     init();
-    initWebSocket();
+    // initWebSocket();
     fillScene();
     addToDOM();
     animate();
@@ -116,3 +124,5 @@ try {
 catch (error) {
     console.log(error);
 }
+
+
