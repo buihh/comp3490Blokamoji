@@ -4,11 +4,12 @@ var scene;
 var renderer;
 var clock = new THREE.Clock();
 var testEmoji;
+
 var positionArray = [];
-var initPosition;
-var currentPosition;
-var responsiveXcoord = 1;
-var responsiveYcoord = 1;
+var lastPosition, diffMove;
+var ping=0;
+
+var STABILIZER = 1;
 
 function fillScene() {
     scene = new THREE.Scene();
@@ -17,7 +18,9 @@ function fillScene() {
     Tools.createRoom();
     Tools.fancyLighting();
     testEmoji = new Emoji.TestEmoji("Test");
+
 }
+
 function init() {
     renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.gammaInput = true;
@@ -27,12 +30,14 @@ function init() {
     renderer.setClearColor(0xAAAAAA, 1.0);
     camera = new THREE.PerspectiveCamera(45, canvasRatio, 1, 40000);
     cameraControls = new THREE.OrbitControls(camera, renderer.domElement);
-    camera.position.set(0, 500, -700);
+    camera.position.set(0, 600, -500);
     cameraControls.target.set(4, 301, 92);
     cameraControls.enablePan = false;
     EventHandlers.keyDownHandler();
     // EventHandlers.keyUpHandler();
 }
+
+// Function to initiate the web socket
 function initWebSocket() {
     var ws = new WebSocket('ws://localhost:9000');
     ws.onopen = function () {
@@ -41,59 +46,84 @@ function initWebSocket() {
     ws.onmessage = function (event) {
         var msg = JSON.parse(event.data);
         // console.log(msg);
-        // Control the emoji through position of object captured from webcam here
+
+         // Control the emoji through position of object captured from webcam here
         positionArray.push({
             x: msg.X,
             y: msg.Y
-        });
-        if (positionArray.length > 5) {
+        })
+
+        if (positionArray.length > 10){
             positionArray.shift(); // reduce the memory for array
         }
+
         // Push it to new x and y coordinate array for computation purpose
         var xCoords = [], yCoords = [];
-        for (var i = Math.max(positionArray.length - 2, 0); i < positionArray.length; i++) {
+        for (var i = math.max(positionArray.length-2, 0); i < positionArray.length; i++){
             xCoords.push(positionArray[i].x);
             yCoords.push(positionArray[i].y);
         }
+
         var posX = math.mean(xCoords);
         var posY = math.mean(yCoords);
+
         // Calculate the current position of the face
-        currentPosition = [posX , posY];
-        // currentPosition = [posX/responsiveXcoord , posY/ responsiveYcoord];
-        if (!initPosition) {
-            initPosition = currentPosition;
-            // responsiveXcoord = initPosition[0]/75; // adjust the coordinate to focus on center
-            // responsiveYcoord = initPosition[1]/75; // adjust the coordinate to focus on center
+        var targetPos = [posX, posY];
+        if(!lastPosition){
+            lastPosition = targetPos;
         }
-        update();
+
+        //Calculate different in face position
+        diffMove = [(targetPos[0] - lastPosition[0])/STABILIZER,
+            (targetPos[1] - lastPosition[1])/STABILIZER];
+        ping = 0;
     };
 }
-;
-function update() {
-    if (positionArray.length === 0) {
+
+function update(){
+    if (positionArray.length === 0){
         return;
     }
-    // Check on X axis if the head move to the left or right
 
-    //Calculate different in face position
-    //deltaX,deltaY
+    ping++;
+    // if(ping<10){
+    //     lastPosition[0] += diffMove[0];
+    //     lastPosition[1] += diffMove[1];
+    // }
 
-    var deltaX = currentPosition[0] - initPosition[0];
-    var deltaY = currentPosition[1] - initPosition[1];
-    testEmoji.rotateInX(deltaY, initPosition[1]);
-    testEmoji.rotateInY(deltaX, initPosition[0]);
+    // Check if the head move to the left or right
+    if(diffMove[0] >1){
+        testEmoji.rotateInY(1); // left inverse
+    }
+    else if(diffMove[0] < (-1)){
+        testEmoji.rotateInY(-1); // right inverse
+    }
+
+    // Check if the head move up or down
+    if(diffMove[1] > 1){
+        testEmoji.rotateInX(-1);
+    }
+    else if(diffMove[1] < (-1)){
+        testEmoji.rotateInX(1);
+    }
 
 }
+
 function addToDOM() {
     var canvas = document.getElementById('canvas');
     canvas.appendChild(renderer.domElement);
 }
+
 function animate() {
     window.requestAnimationFrame(animate);
     render();
 }
+
 function render() {
+    update();
+
     var delta = clock.getDelta();
+
     cameraControls.update();
     renderer.render(scene, camera);
 }
@@ -107,3 +137,5 @@ try {
 catch (error) {
     console.log(error);
 }
+
+

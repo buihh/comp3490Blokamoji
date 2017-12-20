@@ -74,16 +74,17 @@ while True:
     faceRects = fd.detect(gray)
     frameClone = frame.copy()
 
+
     if faceRects is not None:
         for (fX, fY, fW, fH) in faceRects:
             cv2.rectangle(frameClone, (fX, fY), (fX + fW, fY + fH),
                           (0, 255, 0), 2)
             for client in clients:
-                data = {'X': int(fX), 'Y': int(fY), 'W': int(fW), 'H': int(fH)}
+                data = {'X': int(fX), 'Y': int(fY)}
                 json_data = json.dumps(data, cls=IntegerEncoder)
                 client.sendMessage(json_data)
 
-    cv2.imshow("Face", frameClone)
+    cv2.imshow("Face", cv2.flip(frameClone, 1))
 
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
